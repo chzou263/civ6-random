@@ -4,138 +4,219 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>高校联赛随机生成器</title>
+<title>CIV6高校联赛随机工具</title>
 
 <style>
 
 body{
-    font-family: "Microsoft YaHei", Arial;
-    background:#0f172a;
-    color:white;
-    text-align:center;
-    padding:40px 20px;
+font-family: "Microsoft YaHei", Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px 20px;
 }
 
 .container{
-    max-width:500px;
-    margin:auto;
+max-width:500px;
+margin:auto;
 }
 
 h1{
-    margin-bottom:30px;
+margin-bottom:30px;
 }
 
 button{
-    width:220px;
-    padding:14px;
-    margin:10px;
-    font-size:18px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+width:220px;
+padding:14px;
+margin:10px;
+font-size:18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
 }
 
 .generate{
-    background:#22c55e;
-    color:white;
+background:#22c55e;
+color:white;
+}
+
+.generate:disabled{
+background:gray;
+cursor:not-allowed;
 }
 
 .copy{
-    background:#3b82f6;
-    color:white;
+background:#3b82f6;
+color:white;
 }
 
 .result{
-    margin-top:30px;
-    font-size:22px;
-    line-height:42px;
+margin-top:30px;
+font-size:22px;
+line-height:42px;
 }
 
 .footer{
-    margin-top:40px;
-    opacity:0.6;
-    font-size:14px;
+margin-top:40px;
+opacity:0.6;
+font-size:14px;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>高校联赛随机生成器</h1>
+<h1>CIV6高校联赛随机工具</h1>
 
-<button class="generate" onclick="generateRandom()">
-    生成随机
+<button id="generateBtn" class="generate" onclick="generateRandom()">
+生成随机
 </button>
 
 <div class="result">
 
-<div id="map">地图号：--</div>
+<div id="team">队伍：--</div>
+<div id="map">地图序号：--</div>
 <div id="pool1">领袖池1：--</div>
 <div id="pool2">领袖池2：--</div>
-<div id="ban1">随机BAN数1：--</div>
-<div id="ban2">随机BAN数2：--</div>
+<div id="ban">BAN位数：--</div>
 
 </div>
 
 <button class="copy" onclick="copyResult()">
-    复制结果
+复制结果
 </button>
 
 <div class="footer">
-Civ6 League Random Tool
+CIV6 League Random Tool
 </div>
 
 </div>
 
 <script>
 
-function random(min,max){
-    return Math.floor(Math.random()*(max-min+1))+min
-}
+const cooldown = 10 * 60 * 1000
 
-let resultText=""
+let resultText = ""
+
+function random(min,max){
+return Math.floor(Math.random()*(max-min+1))+min
+}
 
 function generateRandom(){
 
-    let map=random(1,30)
-    let pool1=random(1,5)
-    let pool2=random(1,5)
-    let ban1=random(1,6)
-    let ban2=random(1,6)
+const team = random(1,2)
+const map = random(1,30)
+const pool1 = random(1,6)
+const pool2 = random(1,6)
 
-    document.getElementById("map").innerText="地图号："+map
-    document.getElementById("pool1").innerText="领袖池1："+pool1
-    document.getElementById("pool2").innerText="领袖池2："+pool2
-    document.getElementById("ban1").innerText="随机BAN数1："+ban1
-    document.getElementById("ban2").innerText="随机BAN数2："+ban2
+const banA = random(1,6)
+const banB = random(1,6)
 
-    resultText=
-`地图号：${map}
+const ban = banA + banB
+
+document.getElementById("team").innerText="队伍："+team
+document.getElementById("map").innerText="地图序号："+map
+document.getElementById("pool1").innerText="领袖池1："+pool1
+document.getElementById("pool2").innerText="领袖池2："+pool2
+document.getElementById("ban").innerText="BAN位数："+ban
+
+resultText =
+`【CIV6高校联赛随机】
+
+队伍：${team}
+地图序号：${map}
 领袖池1：${pool1}
 领袖池2：${pool2}
-随机BAN数1：${ban1}
-随机BAN数2：${ban2}`
+BAN位数：${ban}`
+
+localStorage.setItem("lastResult", resultText)
+localStorage.setItem("lastTime", Date.now())
+
+startCooldown()
+
 }
 
 function copyResult(){
 
-    if(resultText===""){
-        alert("请先生成随机数")
-        return
-    }
+if(resultText===""){
+alert("请先生成随机")
+return
+}
 
-    navigator.clipboard.writeText(resultText)
+navigator.clipboard.writeText(resultText)
 
-    alert("结果已复制")
+alert("结果已复制")
+
+}
+
+function startCooldown(){
+
+const btn = document.getElementById("generateBtn")
+
+btn.disabled = true
+
+updateCooldown()
+
+const timer = setInterval(updateCooldown,1000)
+
+function updateCooldown(){
+
+const lastTime = localStorage.getItem("lastTime")
+
+if(!lastTime){
+btn.disabled=false
+btn.innerText="生成随机"
+clearInterval(timer)
+return
+}
+
+const remaining = cooldown - (Date.now() - lastTime)
+
+if(remaining <= 0){
+
+btn.disabled=false
+btn.innerText="生成随机"
+clearInterval(timer)
+
+}else{
+
+const min = Math.floor(remaining/60000)
+const sec = Math.floor((remaining%60000)/1000)
+
+btn.innerText=`冷却 ${min}:${sec.toString().padStart(2,"0")}`
+
+}
+
+}
+
+}
+
+window.onload = function(){
+
+const saved = localStorage.getItem("lastResult")
+
+if(saved){
+
+resultText = saved
+
+const lines = saved.split("\n")
+
+document.getElementById("team").innerText=lines[2]
+document.getElementById("map").innerText=lines[3]
+document.getElementById("pool1").innerText=lines[4]
+document.getElementById("pool2").innerText=lines[5]
+document.getElementById("ban").innerText=lines[6]
+
+}
+
+startCooldown()
+
 }
 
 </script>
 
 </body>
-
 </html>
-
