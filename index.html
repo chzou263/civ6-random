@@ -110,7 +110,7 @@ function generateRandom(){
 const team = random(1,2)
 const map = random(1,30)
 const pool1 = random(1,6)
-const pool2 = random(1,6)
+const pool2 = (pool1 + random(1,5)) % 6 + 1
 
 const banA = random(1,6)
 const banB = random(1,6)
@@ -220,6 +220,7 @@ startCooldown()
 
 </body>
 </html>
+
 
 
 
