@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>文明6高校联赛随机生成器</title>
+
+<style>
+
+body{
+    font-family: "Microsoft YaHei", Arial;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+}
+
+h1{
+    margin-bottom:30px;
+}
+
+button{
+    width:220px;
+    padding:14px;
+    margin:10px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.generate{
+    background:#22c55e;
+    color:white;
+}
+
+.copy{
+    background:#3b82f6;
+    color:white;
+}
+
+.result{
+    margin-top:30px;
+    font-size:22px;
+    line-height:42px;
+}
+
+.footer{
+    margin-top:40px;
+    opacity:0.6;
+    font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>文明6高校联赛随机生成器</h1>
+
+<button class="generate" onclick="generateRandom()">
+🎲 生成随机
+</button>
+
+<div class="result">
+
+<div id="map">地图号：--</div>
+<div id="pool1">领袖池1：--</div>
+<div id="pool2">领袖池2：--</div>
+<div id="ban1">随机BAN数1：--</div>
+<div id="ban2">随机BAN数2：--</div>
+
+</div>
+
+<button class="copy" onclick="copyResult()">
+📋 复制结果
+</button>
+
+<div class="footer">
+Civ6 League Random Tool
+</div>
+
+</div>
+
+<script>
+
+function random(min,max){
+    return Math.floor(Math.random()*(max-min+1))+min
+}
+
+let resultText=""
+
+function generateRandom(){
+
+    let map=random(1,30)
+    let pool1=random(1,5)
+    let pool2=random(1,5)
+    let ban1=random(1,6)
+    let ban2=random(1,6)
+
+    document.getElementById("map").innerText="地图号："+map
+    document.getElementById("pool1").innerText="领袖池1："+pool1
+    document.getElementById("pool2").innerText="领袖池2："+pool2
+    document.getElementById("ban1").innerText="随机BAN数1："+ban1
+    document.getElementById("ban2").innerText="随机BAN数2："+ban2
+
+    resultText=
+`地图号：${map}
+领袖池1：${pool1}
+领袖池2：${pool2}
+随机BAN数1：${ban1}
+随机BAN数2：${ban2}`
+}
+
+function copyResult(){
+
+    if(resultText===""){
+        alert("请先生成随机数")
+        return
+    }
+
+    navigator.clipboard.writeText(resultText)
+
+    alert("结果已复制")
+}
+
+</script>
+
+</body>
+</html>
