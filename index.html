@@ -110,7 +110,10 @@ function generateRandom(){
 const team = random(1,2)
 const map = random(1,30)
 const pool1 = random(1,6)
-const pool2 = (pool1 + random(1,5)) % 6 + 1
+let pool2 = random(1,6)
+while(pool2 === pool1){
+    pool2 = random(1,6)
+}
 
 const banA = random(1,6)
 const banB = random(1,6)
