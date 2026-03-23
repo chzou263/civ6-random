@@ -106,10 +106,11 @@ return Math.floor(Math.random()*(max-min+1))+min
 }
 
 function generateRandom(){
+const maps = [1,3,5]
+const pools = ["非洲大洋洲","美洲","西北欧","中东欧","中东","东亚"]
 
 const team = random(1,2)
-const map = random(1,30)
-const pools = ["非洲大洋洲","美洲","西北欧","中东欧","中东","东亚"]
+const map = maps[Math.floor(Math.random() * maps.length)]
 const pool1 = pools[Math.floor(Math.random()*pools.length)]
 const remainingPools = pools.filter(p => p !== pool1)
 const pool2 = remainingPools[Math.floor(Math.random()*remainingPools.length)]
